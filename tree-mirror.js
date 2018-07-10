@@ -1,3 +1,4 @@
+define(['TreeMirror'],function(){
 MutationSummary = require('./mutation-summary');
 
 var blacklistedTags = { "SCRIPT": 1, "STYLE": 1, "NOSCRIPT": 1, "IFRAME": 1, "BR": 1, "FONT": 1, "tspan": 1, "text": 1, "g": 1, "rect": 1, "path": 1, "defs": 1, "clipPath": 1, "desc": 1, "title": 1, "use": 1 };
@@ -457,3 +458,4 @@ var TreeMirrorClient = (function () {
 })();
 
 exports.Client = TreeMirrorClient;
+})
