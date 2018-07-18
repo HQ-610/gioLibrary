@@ -1,7 +1,6 @@
-define(['TreeMirror'],function(){
-MutationSummary = require('./mutation-summary');
+MutationSummary = require('mutation-summary');
 
-var blacklistedTags = { "SCRIPT": 1, "STYLE": 1, "NOSCRIPT": 1, "IFRAME": 1, "BR": 1, "FONT": 1, "tspan": 1, "text": 1, "g": 1, "rect": 1, "path": 1, "defs": 1, "clipPath": 1, "desc": 1, "title": 1, "use": 1 };
+var blacklistedTags = { "SCRIPT": 1, "STYLE": 1, "NOSCRIPT": 1, "IFRAME": 1, "BR": 1, "FONT": 1, "tspan": 1, "text": 1, "g": 1, "rect": 1, "path": 1, "defs": 1, "clipPath": 1, "desc": 1, "title": 1, "use": 1, 'math': 1 };
 var listTags = ["TR", "LI", "DL"];
 var blacklistedClassRegex = /^(clear|clearfix|active|hover|enabled|hidden|display|focus|disabled|ng-|growing-)/;
 var supportedInputTypes = ['button', 'submit'];
@@ -107,23 +106,18 @@ var TreeMirrorClient = (function () {
       break;
 
     case 1: // Node.ELEMENT_NODE:
-      //math 标签 无style属性 直接返回
-      if (!node.style) {
-        return null;
-      }
-
-      var display = node.style.display;
-      if (display !== "block" && display !== "inline" && (display === "none" || window.getComputedStyle(node).display === "none")) {
-        if (node.tagName !== 'A' && node.querySelector('a') === null) {
-          return null;
+      if (node.style) {
+        var display = node.style.display;
+        if (display !== "block" && display !== "inline" && (display === "none" || window.getComputedStyle(node).display === "none")) {
+          if (node.tagName !== 'A' && node.querySelector('a') === null) {
+            return null;
+          }
         }
       }
+
       var elm = node;
       data.tagName = elm.tagName;
       data.attributes = { any: elm.hasAttributes() };
-
-      this.appendDataAttrs(data, elm)
-
       depth += elm.tagName.toLowerCase();
       if (elm.hasAttribute('id') && elm.getAttribute('id').match(/^[0-9]/) === null)  {
         depth += "#" + elm.getAttribute('id');
@@ -317,10 +311,6 @@ var TreeMirrorClient = (function () {
     return data;
   };
 
-  TreeMirrorClient.prototype.appendDataAttrs = function (data, elm) {
-    return;
-  }
-
   TreeMirrorClient.prototype.serializeAddedAndMoved = function (added, reparented, reordered) {
     var _this = this;
     var all = added.concat(reparented).concat(reordered);
@@ -458,4 +448,3 @@ var TreeMirrorClient = (function () {
 })();
 
 exports.Client = TreeMirrorClient;
-})
